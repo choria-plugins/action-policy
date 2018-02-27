@@ -1,8 +1,8 @@
 metadata :name        => "actionpolicy",
-         :description => "Action Policy simplerpc authorization plugin",
+         :description => "Choria Action Policy authorization plugin",
          :author      => "P.Loubser <pieter.loubser@puppetlabs.com>",
          :license     => "Apache-2.0",
-         :version     => "2.2.0",
+         :version     => "3.0.0",
          :url         => "https://github.com/choria-plugins/action-policy",
          :timeout     => 1
 
