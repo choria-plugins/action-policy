@@ -1,3 +1,13 @@
+# Changelog
+
+Change history for `choria/mcollective_util_actionpolicy`
+
+# 3.0.0
+
+Released 2018-02-27
+
+* Fork from Puppet Inc
+
 # 2.2.0
 
 * Change debug message to warning if action policy cannot be parsed (PR#8)
