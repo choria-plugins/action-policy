@@ -10,7 +10,7 @@ This agent is installed by default as part of the [Choria Orchestrator](https://
 
 There are three settings available for the actionpolicy plugin:
 
-* `allow_unconfigured` -- whether to allow requests to agents that do not have policy files configured. Boolean, with allowed values of `0`, `1`, `y`, `n`; values of `true` or `false` are not allowed. Defaults to `0`.
+* `allow_unconfigured` -- whether to allow requests to agents that do not have policy files configured. Boolean, with allowed values of `0`, `1`, `y`, `n`; values of `true` or `false` are not allowed. Defaults to `1` in Choria.
 * `enable_default` -- whether to use a default policy file. Boolean, with allowed values of `0`, `1`, `y`, `n`; values of `true` or `false` are not allowed. Defaults to `0`.
 * `default_name` -- the name of the default policy file, if `enable_default` is set to `1` or `y`.
 
@@ -34,9 +34,11 @@ mcollective_util_actionpolicy::config:
 
 You can optionally have a default policy file that applies in the absence of an agent-specific policy file.
 
-    plugin.actionpolicy.enable_default = 1
-    plugin.actionpolicy.default_name = default
-
+```yaml
+mcollective_util_actionpolicy::server_config:
+  enable_default: 1
+  default_name: default
+```
 This allows you to create a policy file called default.policy which will be used unless a specific policy file exists. Note that if both
 `allow_unconfigured` and `enable_default` are configured, all requests will go through the default policy, as `enable_default` takes precedence
 over `allow_unconfigured`.
