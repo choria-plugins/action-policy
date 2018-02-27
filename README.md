@@ -1,17 +1,12 @@
-Action Policy Authorization Plugin
-=============================
+# Choria Action Policy Authorization Plugin
 
 This is a plugin that provides fine grained action level authorization for agents. Any MCollective agent plugins based on SimpleRPC can be restricted with authorization plugins like this one.
 
-Installation
-============
+# Installation
 
-* [Follow the plugin deployment guide](http://docs.puppetlabs.com/mcollective/deploy/plugins.html#method-2-copying-plugins-into-the-libdir), using the libdir copy method and placing the `actionpolicy.rb` and `actionpolicy.ddl` files in the `util` directory.
+This agent is installed by default as part of the [Choria Orchestrator](https://choria.io).
 
-Note that it is not currently possible to use the 'mco plugin package' command to package this plugin.
-
-Configuration
-=============
+# Configuration
 
 There are three settings available for the actionpolicy plugin:
 
@@ -19,14 +14,21 @@ There are three settings available for the actionpolicy plugin:
 * `enable_default` -- whether to use a default policy file. Boolean, with allowed values of `0`, `1`, `y`, `n`; values of `true` or `false` are not allowed. Defaults to `0`.
 * `default_name` -- the name of the default policy file, if `enable_default` is set to `1` or `y`.
 
-General authentication configuration options can be set in the server config file.
+This plugin is enabled by default in the Choria Orchestrator, you can disable it completely if you wish:
 
-    # Enables system wide rpc authorization
-    rpcauthorization = 1
-    # Sets the authorization provider to use the actionpolicy plugin
-    rpcauthprovider = action_policy
-    # Allow requests to agents without policies
-    plugin.actionpolicy.allow_unconfigured = 1
+```yaml
+mcollective::server_config:
+  rpcauthorization: 0
+```
+
+Specific configuration options can be set as follows in Hiera, in general you will not need to adjust any of these it's all configured correctly by Choria:
+
+```yaml
+mcollective_util_actionpolicy::config:
+  allow_unconfigured: false
+  enable_default: false
+  default_name: default.policy
+```
 
 ## Default Policy Files
 
@@ -39,10 +41,11 @@ This allows you to create a policy file called default.policy which will be used
 `allow_unconfigured` and `enable_default` are configured, all requests will go through the default policy, as `enable_default` takes precedence
 over `allow_unconfigured`.
 
-Usage
-=====
+## Usage
 
-Policies are defined in files like `<configdir>/policies/<agent>.policy`
+Policies are defined in files like `<configdir>/policies/<agent>.policy`, the Choria Orchestrator allows you to configure all of this using Hiera, please consult the [Choria AAA Documentation](https://choria.io/docs/configuration/aaa/).
+
+Below find references of the configuration files, in Choria all of these are managed by Hiera.
 
 Example: Puppet agent policy file
 
@@ -114,17 +117,18 @@ This group can then be used where you would normal put a Caller ID:
 
 You can list multiple groups in space separated lists.  You cannot mix certnames and group names in the same policy line.
 
-Hardcoding ActionPolicy Into a Specific Agent
-============================
+# Hardcoding ActionPolicy Into a Specific Agent
 
 Instead of using the site-wide authorization settings (as described above), you can also hardcode authorization plugins in your agents:
 
-    module MCollective::Agent
-        class Service<RPC::Agent
-            authorized_by :action_policy
+```ruby
+module MCollective::Agent
+  class Service<RPC::Agent
+    authorized_by :action_policy
 
-            # ...
-        end
-    end
+    # ...
+  end
+end
+```
 
 By hardcoding, you're indicating that the ActionPolicy rules *must* allow this action or it will fail.

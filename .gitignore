@@ -1,4 +1,6 @@
-ext/packaging
-/pkg/
-
 Gemfile.lock
+puppet/LICENSE
+puppet/NOTICE
+puppet/README.md
+puppet/CHANGELOG.md
+.ruby-version
