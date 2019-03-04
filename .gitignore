@@ -4,3 +4,4 @@ puppet/NOTICE
 puppet/README.md
 puppet/CHANGELOG.md
 .ruby-version
+*.tar.gz
