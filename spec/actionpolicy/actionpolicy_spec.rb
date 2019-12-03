@@ -46,6 +46,7 @@ module MCollective
           expect(actionpolicy.caller_in_callerids?('one two three')).to be(false)
           expect(actionpolicy.caller_in_callerids?('rspec_caller another_caller')).to be(true)
           expect(actionpolicy.caller_in_callerids?('another_caller rspec_caller')).to be(true)
+          expect(actionpolicy.caller_in_callerids?('another_caller /rspec/')).to be(true)
         end
       end
 
@@ -190,6 +191,16 @@ module MCollective
           request.stubs(:caller).returns('uid=500')
           actionpolicy = ActionPolicy.new(request)
           expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example2'))).to be(true)
+
+          request.stubs(:caller).returns('cert=db_admin')
+          actionpolicy = ActionPolicy.new(request)
+          expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example2'))).to be(true)
+
+          request.stubs(:caller).returns('cert=db_admn')
+          actionpolicy = ActionPolicy.new(request)
+          expect {
+            actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example2'))
+          }.to raise_error RPCAborted
 
           request.stubs(:caller).returns('uid=501')
           actionpolicy = ActionPolicy.new(request)
