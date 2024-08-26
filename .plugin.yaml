@@ -1,4 +1,0 @@
-mcollective_util_actionpolicy::server_config:
-  allow_unconfigured: 0
-  enable_default: 0
-
