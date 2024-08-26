@@ -1,0 +1,2 @@
+spec/spec_helper.rb:
+  use_should_syntax: false
