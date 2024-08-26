@@ -1,7 +1,7 @@
 #!/bin/env rspec
 
 require 'spec_helper'
-require File.join(File.dirname(__FILE__), '../../', 'util', 'actionpolicy.rb')
+require File.join(File.dirname(__FILE__), '../../',  'files', 'mcollective', 'util', 'actionpolicy.rb')
 
 module MCollective
   module Util
@@ -405,7 +405,7 @@ module MCollective
           request.stubs(:caller).returns('uid=700')
           request.stubs(:action).returns('restart')
           Util.stubs(:get_fact).with('environment').returns('development')
-          Matcher.stubs(:eval_compound_fstatement).with('value' => 'enabled', 'name' => 'puppet', 'operator' => '==', 'params' => nil, 'r_compare' => 'false').returns(true)
+          Matcher.stubs(:eval_compound_fstatement).with({'value' => 'enabled', 'name' => 'puppet', 'operator' => '==', 'params' => nil, 'r_compare' => 'false'}).returns(true)
           actionpolicy = ActionPolicy.new(request)
           expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example15'))).to be(true)
         end
