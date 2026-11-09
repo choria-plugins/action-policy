@@ -1,2 +1,0 @@
-policy default deny
-allow		uid=500		rspec		foo=bar and one or (two and one)
