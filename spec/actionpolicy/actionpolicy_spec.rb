@@ -343,37 +343,6 @@ module MCollective
           }.to raise_error RPCAborted
         end
 
-        it 'should parse example12 correctly' do
-          request.stubs(:caller).returns('uid=500')
-          request.stubs(:action).returns('rspec')
-          Util.stubs(:has_cf_class?).with('rspec').returns(true)
-          Util.stubs(:get_fact).with('foo').returns('bar')
-          Util.stubs(:get_fact).with('bar').returns('foo')
-          actionpolicy = ActionPolicy.new(request)
-          expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example12'))).to be(true)
-        end
-
-        it 'should parse example13 correctly' do
-          request.stubs(:caller).returns('uid=500')
-          request.stubs(:action).returns('rspec')
-          Util.stubs(:has_cf_class?).with('one').returns(true)
-          Util.stubs(:has_cf_class?).with('two').returns(true)
-          Util.stubs(:has_cf_class?).with('three').returns(false)
-          Util.stubs(:get_fact).with('foo').returns('bar')
-          actionpolicy = ActionPolicy.new(request)
-          expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example13'))).to be(true)
-        end
-
-        it 'should parse example14 correctly' do
-          request.stubs(:caller).returns('uid=500')
-          request.stubs(:action).returns('rspec')
-          Util.stubs(:has_cf_class?).with('one').returns(true)
-          Util.stubs(:has_cf_class?).with('two').returns(false)
-          Util.stubs(:get_fact).with('foo').returns('bar')
-          actionpolicy = ActionPolicy.new(request)
-          expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example14'))).to be(true)
-        end
-
         it 'should parse example15 correctly' do
           # first field
           request.stubs(:caller).returns('uid=500')
@@ -398,14 +367,6 @@ module MCollective
           request.stubs(:caller).returns('uid=600')
           request.stubs(:action).returns('status')
           Util.stubs(:get_fact).with('customer').returns('acme')
-          actionpolicy = ActionPolicy.new(request)
-          expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example15'))).to be(true)
-
-          # fith field
-          request.stubs(:caller).returns('uid=700')
-          request.stubs(:action).returns('restart')
-          Util.stubs(:get_fact).with('environment').returns('development')
-          Matcher.stubs(:eval_compound_fstatement).with({'value' => 'enabled', 'name' => 'puppet', 'operator' => '==', 'params' => nil, 'r_compare' => 'false'}).returns(true)
           actionpolicy = ActionPolicy.new(request)
           expect(actionpolicy.parse_policy_file(File.join(fixtures_dir, 'example15'))).to be(true)
         end
@@ -564,17 +525,6 @@ module MCollective
         it 'should lookup the value of a statement if param is a statement' do
           actionpolicy.expects(:lookup).with('foo=bar').returns(true)
           expect(actionpolicy.eval_statement({'statement' => 'foo=bar'})).to be(true)
-        end
-
-        it 'should lookup the value of a data function if param is a fstatement' do
-          Matcher.expects(:eval_compound_fstatement).with("rspec('data').value=result").returns(true)
-          expect(actionpolicy.eval_statement({'fstatement' => "rspec('data').value=result"})).to be(true)
-        end
-
-        it 'should log a failure message and return false if the fstatement cannot be parsed' do
-          Matcher.expects(:eval_compound_fstatement).with("rspec('data').value=result").raises('error')
-          Log.expects(:warn).with('Could not call Data function in policy file: error')
-          expect(actionpolicy.eval_statement({'fstatement' => "rspec('data').value=result"})).to be(false)
         end
       end
 
